@@ -61,6 +61,9 @@ export const kindPauses = {
   add: () => write(KEYS.kind, kindPauses.count() + 1),
 };
 
+/** Daily worry-time slot (5.3, 9.6). */
+export const WORRY_TIME = "18:30";
+
 /** "6:30" from "18:30". */
 export const clock = (hhmm: string) => {
   const [h, m] = hhmm.split(":").map(Number);

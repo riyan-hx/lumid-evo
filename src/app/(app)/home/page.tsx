@@ -11,6 +11,7 @@ import { Orb } from "@/components/ui/orb";
 import { useCheckIns } from "@/lib/checkins";
 import { STYLE_HREF, useProfile } from "@/lib/profile";
 import { safety } from "@/lib/safety";
+import { circle, homework } from "@/lib/circle";
 
 const part = (h: number) => (h < 12 ? "morning" : h < 17 ? "afternoon" : "evening");
 
@@ -22,9 +23,13 @@ export default function Home() {
   const [hideAsk, setHideAsk] = useState(false);
   const [text, setText] = useState("");
   const [rough, setRough] = useState<boolean | null>(null);
+  const [fromPsy, setFromPsy] = useState<string | null>(null);
   useEffect(() => {
     if (safety.needsReturn()) return router.replace("/safety/return");
     setRough(safety.isPaused()); // eslint-disable-line react-hooks/set-state-in-effect -- one-time read of device storage
+    const open = homework.all().filter((h) => !h.done).length;
+    const who = circle.get()?.clinician.short;
+    if (who && open) setFromPsy(`${open} ${open === 1 ? "thing" : "things"} from ${who} this week`);
   }, [router]);
   const now = new Date();
   const p = part(now.getHours());
@@ -38,8 +43,8 @@ export default function Home() {
   const lines = [
     last ? { icon: "moon-lav-14", bg: "bg-lavender-soft", text: `Last check-in: ${last.feeling.toLowerCase()}${last.word ? `, ${last.word}` : ""}` } : null,
     { icon: "clock-peach-14", bg: "bg-peach-soft", text: items.length >= 10 ? "Evo is learning when your days feel hardest" : "A quick check-in helps Evo learn your patterns" },
-    { icon: "heart-limedeep-14", bg: "bg-lime-soft", text: "Showing up for yourself counts" },
-  ].filter(Boolean) as { icon: string; bg: string; text: string }[];
+    fromPsy ? { icon: "heart-limedeep-14", bg: "bg-lime-soft", text: fromPsy, href: "/plan" } : { icon: "heart-limedeep-14", bg: "bg-lime-soft", text: "Showing up for yourself counts" },
+  ].filter(Boolean) as { icon: string; bg: string; text: string; href?: string }[];
 
   return (
     <FigmaScreen gap={14} className="pb-[110px]">
@@ -52,7 +57,7 @@ export default function Home() {
           </h1>
         </div>
         <Link
-          href="/settings"
+          href="/reminders"
           aria-label="Reminders and notifications"
           className="flex size-11 items-center justify-center rounded-[22px] border border-white bg-white/78 shadow-[0_10px_26px_rgba(21,26,19,0.07)] backdrop-blur-[12px]"
         >
@@ -79,7 +84,13 @@ export default function Home() {
             <Tile size={26} radius={9} bg={l.bg}>
               <FigmaIcon name={l.icon} size={14} />
             </Tile>
-            <p className="flex-1 type-body-s text-t2">{l.text}</p>
+            {l.href ? (
+              <Link href={l.href} className="flex-1 type-body-s text-t2 underline decoration-line-strong underline-offset-2">
+                {l.text}
+              </Link>
+            ) : (
+              <p className="flex-1 type-body-s text-t2">{l.text}</p>
+            )}
           </div>
         ))}
         {!hideAsk && (

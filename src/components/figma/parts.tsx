@@ -92,7 +92,7 @@ export function FigmaToggle({ on, onChange, label }: { on: boolean; onChange: (v
 /** Settings-style row card (radius 18, p 12): tile 36 + label/caption + trailing control. */
 export function RowCard({ icon, tileBg, title, note, children, className }: { icon: string; tileBg: string; title: string; note: string; children?: ReactNode; className?: string }) {
   return (
-    <GlassCard className={cn("rounded-[18px] p-3", className)}>
+    <div className={cn("flex w-full items-center gap-3 rounded-[18px] border border-white bg-white/78 p-3 shadow-[0_10px_26px_rgba(21,26,19,0.07)] backdrop-blur-[12px]", className)}>
       <Tile size={36} radius={12} bg={tileBg}>
         <FigmaIcon name={icon} size={19} />
       </Tile>
@@ -101,7 +101,7 @@ export function RowCard({ icon, tileBg, title, note, children, className }: { ic
         <p className="type-caption text-t3">{note}</p>
       </div>
       {children}
-    </GlassCard>
+    </div>
   );
 }
 

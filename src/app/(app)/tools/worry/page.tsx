@@ -9,9 +9,9 @@ import { SoftChip } from "@/components/ui/controls";
 import { Pill } from "@/components/ui/pill";
 import { useChats } from "@/lib/chat";
 import { cn } from "@/lib/cn";
-import { actionFor, clock, type Worry, worries } from "@/lib/tool-store";
+import { actionFor, clock, type Worry, WORRY_TIME, worries } from "@/lib/tool-store";
 
-const WORRY_TIME = "18:30";
+
 const PERSON = /\b(amma|achan|appa|mum|mom|dad|mother|father|sister|brother|her|his)\b/i;
 
 function look(w: Worry) {
