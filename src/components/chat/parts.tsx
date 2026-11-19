@@ -376,15 +376,15 @@ export function EvidenceCard({ supports, against }: { supports: string[]; agains
 }
 
 /** Two stacked bars (peach = before, lime = after) + "80 → 40" — used in X6, X9. */
-export function BeforeAfter({ label, before, after, labelWidth = 70 }: { label: string; before: number; after: number; labelWidth?: number }) {
+export function BeforeAfter({ label, before, after, labelWidth = 70, bar = 8 }: { label: string; before: number; after: number; labelWidth?: number; bar?: 8 | 10 }) {
   return (
     <div className="flex w-full items-center gap-2.5">
       <p className="shrink-0 type-body-s text-t2" style={{ width: labelWidth }}>
         {label}
       </p>
       <div className="flex flex-1 flex-col gap-1">
-        <div className="h-2 rounded-[4px] bg-peach-soft" style={{ width: `${before}%` }} />
-        <div className="h-2 rounded-[4px]" style={{ width: `${after}%`, backgroundImage: "linear-gradient(173.29deg, rgb(163,226,125) 0%, rgb(98,191,59) 71.429%)" }} />
+        <div className="rounded-[4px] bg-peach-soft" style={{ width: `${before}%`, height: bar, borderRadius: bar / 2 }} />
+        <div style={{ width: `${after}%`, height: bar, borderRadius: bar / 2, backgroundImage: "linear-gradient(173.29deg, rgb(163,226,125) 0%, rgb(98,191,59) 71.429%)" }} />
       </div>
       <p className="shrink-0 type-label-m text-t1 tabular-nums">
         {before} → {after}
