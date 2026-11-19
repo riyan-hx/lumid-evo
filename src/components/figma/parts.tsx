@@ -109,3 +109,72 @@ export function RowCard({ icon, tileBg, title, note, children, className }: { ic
 export function SectionLabel({ children }: { children: ReactNode }) {
   return <p className="type-label-s text-t3">{children}</p>;
 }
+
+/** Header for flow screens: 44 px glass close/back + "Check-in" title + caption (no 100 px row). */
+export function FlowHeader({ icon, label, title, sub, onClick }: { icon: "close" | "chevron-left"; label: string; title: string; sub: string; onClick: () => void }) {
+  return (
+    <div className="flex w-full items-center gap-2.5">
+      <button
+        type="button"
+        aria-label={label}
+        onClick={onClick}
+        className="flex size-11 shrink-0 cursor-pointer items-center justify-center rounded-[22px] border border-white bg-white/78 backdrop-blur-[12px]"
+      >
+        <FigmaIcon name={icon} size={20} />
+      </button>
+      <div className="flex flex-1 flex-col gap-px">
+        <p className="type-label-m text-t1">{title}</p>
+        <p className="type-caption text-t3">{sub}</p>
+      </div>
+    </div>
+  );
+}
+
+/** Evo slider card: label + value, lime-soft track (10), lime gradient fill, Figma knob. Native range for input. */
+export function FigmaSlider({
+  label,
+  valueText,
+  fraction,
+  min,
+  max,
+  step,
+  value,
+  onChange,
+  ariaValueText,
+}: {
+  label: string;
+  valueText: string;
+  fraction: number;
+  min: number;
+  max: number;
+  step: number;
+  value: number;
+  onChange: (v: number) => void;
+  ariaValueText?: string;
+}) {
+  const pct = Math.max(0, Math.min(1, fraction)) * 100;
+  return (
+    <div className="flex w-full flex-col gap-2.5 rounded-[20px] border border-white bg-white/78 p-3.5 shadow-[0_10px_26px_rgba(21,26,19,0.07)] backdrop-blur-[12px]">
+      <div className="flex w-full items-center">
+        <p className="flex-1 type-label-m text-t1">{label}</p>
+        <p className="type-label-s text-lime-deep">{valueText}</p>
+      </div>
+      <div className="relative h-2.5 w-full rounded-[5px] bg-lime-soft">
+        <div className="absolute top-0 left-0 h-2.5 rounded-[5px]" style={{ width: `${pct}%`, backgroundImage: "var(--gradient-lime)" }} />
+        {/* eslint-disable-next-line @next/next/no-img-element -- Figma knob (22 px + shadow bleed) */}
+        <img src="/figma/slider-knob.svg" alt="" aria-hidden width={34} height={34} className="pointer-events-none absolute max-w-none" style={{ left: `calc(${pct}% - 17px)`, top: -10 }} />
+        <input
+          type="range"
+          aria-label={label}
+          aria-valuetext={ariaValueText ?? valueText}
+          min={min}
+          max={max}
+          step={step}
+          value={value}
+          onChange={(e) => onChange(Number(e.target.value))}
+          className="absolute -inset-y-3 inset-x-0 w-full cursor-pointer opacity-0"
+        />
+      </div>
+    </div>
+  );
+}

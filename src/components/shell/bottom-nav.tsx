@@ -5,11 +5,14 @@ import { usePathname } from "next/navigation";
 import { cn } from "@/lib/cn";
 
 const TABS = [
-  { href: "/home", label: "Home", glyph: "home", match: ["/home", "/first-day", "/journal", "/insights", "/check-in"] },
+  { href: "/home", label: "Home", glyph: "home", match: ["/home", "/first-day"] },
   { href: "/chat", label: "Chat", glyph: "chat", match: ["/chat", "/chats"] },
   { href: "/voice", label: "Voice", glyph: "voice", match: ["/voice"] },
-  { href: "/settings", label: "Settings", glyph: "settings", match: ["/settings"] },
+  { href: "/settings", label: "Settings", glyph: "settings", match: ["/settings", "/journal"] },
 ];
+
+/** Screens that show the nav in Figma (tab roots). Flow screens (check-in steps, tools…) don't. */
+const SHOWN = ["/home", "/first-day", "/chat", "/chats", "/voice", "/settings", "/journal"];
 
 /**
  * Evo DS "Bottom Nav" (Figma 1:188), exact: floating pill, dashed border, 60 px circles,
@@ -17,6 +20,7 @@ const TABS = [
  */
 export function BottomNav() {
   const path = usePathname();
+  if (!SHOWN.includes(path)) return null;
   const active = TABS.find((t) => t.match.some((m) => path === m || path.startsWith(m + "/")))?.href;
   return (
     <nav
