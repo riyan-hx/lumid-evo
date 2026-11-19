@@ -7,6 +7,7 @@ import { Message } from "@/components/ui/message";
 import { Orb } from "@/components/ui/orb";
 import { Pill } from "@/components/ui/pill";
 import { IntensitySlider } from "@/components/ui/slider";
+import { StatesDemo } from "./states";
 
 /** Living gallery of the design-system primitives (Dev Docs board 04). */
 export default function UiGallery() {
@@ -51,6 +52,7 @@ export default function UiGallery() {
           That stings — being passed over in front of everyone.
         </Message>
       </div>
+      <StatesDemo />
     </main>
   );
 }

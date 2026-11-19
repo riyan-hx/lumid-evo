@@ -1,4 +1,6 @@
 import type { Metadata, Viewport } from "next";
+import { OfflineBanner } from "@/components/states/offline-banner";
+import { ToastProvider } from "@/components/states/toast";
 import "./globals.css";
 
 export const metadata: Metadata = {
@@ -17,7 +19,12 @@ export const viewport: Viewport = {
 export default function RootLayout({ children }: LayoutProps<"/">) {
   return (
     <html lang="en" className="antialiased">
-      <body className="bg-paper font-sans text-t1">{children}</body>
+      <body className="bg-paper font-sans text-t1">
+        <ToastProvider>
+          <OfflineBanner />
+          {children}
+        </ToastProvider>
+      </body>
     </html>
   );
 }
