@@ -6,13 +6,13 @@ import { cn } from "@/lib/cn";
 
 const TABS = [
   { href: "/home", label: "Home", glyph: "home", match: ["/home", "/first-day", "/plan"] },
-  { href: "/chat", label: "Chat", glyph: "chat", match: ["/chat", "/chats"] },
+  { href: "/chat", label: "Chat", glyph: "chat", match: ["/chat", "/chats", "/discover"] },
   { href: "/voice", label: "Voice", glyph: "voice", match: ["/voice"] },
   { href: "/settings", label: "Settings", glyph: "settings", match: ["/settings", "/journal", "/insights/week", "/wins"] },
 ];
 
 /** Screens that show the nav in Figma (tab roots). Flow screens (check-in steps, tools…) don't. */
-const SHOWN = ["/home", "/first-day", "/chat", "/chats", "/chats/results", "/settings", "/journal", "/insights/week", "/plan", "/wins"];
+const SHOWN = ["/home", "/first-day", "/chat", "/chats", "/chats/results", "/settings", "/journal", "/insights/week", "/plan", "/wins", "/discover"];
 
 /**
  * Evo DS "Bottom Nav" (Figma 1:188), exact: floating pill, dashed border, 60 px circles,
