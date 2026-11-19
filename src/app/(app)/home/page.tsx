@@ -9,7 +9,8 @@ import { RoughDay } from "@/components/safety/rough-day";
 import { SoftChip } from "@/components/ui/controls";
 import { Orb } from "@/components/ui/orb";
 import { useCheckIns } from "@/lib/checkins";
-import { STYLE_HREF, useProfile } from "@/lib/profile";
+import { checkinHref, twoWeeksLow } from "@/lib/checkin-route";
+import { useProfile } from "@/lib/profile";
 import { safety } from "@/lib/safety";
 import { circle, homework } from "@/lib/circle";
 
@@ -41,8 +42,8 @@ export default function Home() {
 
   // Brief lines come from the person's own data (insights engine later); never invented facts.
   const lines = [
-    last ? { icon: "moon-lav-14", bg: "bg-lavender-soft", text: `Last check-in: ${last.feeling.toLowerCase()}${last.word ? `, ${last.word}` : ""}` } : null,
-    { icon: "clock-peach-14", bg: "bg-peach-soft", text: items.length >= 10 ? "Evo is learning when your days feel hardest" : "A quick check-in helps Evo learn your patterns" },
+    last ? { icon: "moon-lav-14", bg: "bg-lavender-soft", text: `Last check-in: ${last.feeling.toLowerCase()}${last.word ? `, ${last.word}` : ""}`, href: "/journal" } : null,
+    twoWeeksLow(items) ? { icon: "clock-peach-14", bg: "bg-peach-soft", text: "Two heavy weeks — a 1-minute check might help", href: "/check-in/two-week" } : { icon: "clock-peach-14", bg: "bg-peach-soft", text: items.length >= 10 ? "Evo is learning when your days feel hardest" : "A quick check-in helps Evo learn your patterns", href: items.length >= 10 ? "/insights" : undefined },
     fromPsy ? { icon: "heart-limedeep-14", bg: "bg-lime-soft", text: fromPsy, href: "/plan" } : { icon: "heart-limedeep-14", bg: "bg-lime-soft", text: "Showing up for yourself counts" },
   ].filter(Boolean) as { icon: string; bg: string; text: string; href?: string }[];
 
@@ -85,7 +86,7 @@ export default function Home() {
               <FigmaIcon name={l.icon} size={14} />
             </Tile>
             {l.href ? (
-              <Link href={l.href} className="flex-1 type-body-s text-t2 underline decoration-line-strong underline-offset-2">
+              <Link href={l.href} className="flex-1 type-body-s text-t2">
                 {l.text}
               </Link>
             ) : (
@@ -95,7 +96,7 @@ export default function Home() {
         ))}
         {!hideAsk && (
           <div className="flex gap-2">
-            <SoftChip label="Check in" selected onClick={() => router.push(STYLE_HREF[profile.checkinStyle] ?? "/check-in")} />
+            <SoftChip label="Check in" selected onClick={() => router.push(checkinHref(profile.checkinStyle, items))} />
             <SoftChip label="Not now" onClick={() => setHideAsk(true)} />
           </div>
         )}
@@ -126,7 +127,12 @@ export default function Home() {
         </button>
       </form>
 
-      <h2 className="type-title-m text-ink">Tools for tonight</h2>
+      <div className="flex w-full items-center">
+        <h2 className="flex-1 type-title-m text-ink">Tools for tonight</h2>
+        <Link href="/discover" className="type-label-m text-lime-deep">
+          Discover
+        </Link>
+      </div>
       <div className="flex w-full gap-2.5">
         {[
           { icon: "brain-lav-18", bg: "bg-lavender-soft", title: "Untangle a thought", note: "CBT · 5 min", href: "/tools" },

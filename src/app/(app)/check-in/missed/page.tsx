@@ -1,14 +1,16 @@
 "use client";
 
 import { useRouter } from "next/navigation";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { FigmaScreen, Grow } from "@/components/figma/screen";
 import { useToast } from "@/components/states/toast";
 import { Orb } from "@/components/ui/orb";
 import { Pill } from "@/components/ui/pill";
 import { useCheckIns } from "@/lib/checkins";
 import { cn } from "@/lib/cn";
+import { MISSED_SEEN } from "@/lib/checkin-route";
 import { STYLE_HREF, useProfile } from "@/lib/profile";
+import { write } from "@/lib/store";
 
 const DAYS = [
   { id: "rough", label: "Rough", feeling: "Overwhelmed", intensity: 70 },
@@ -25,6 +27,7 @@ export default function MissedCheckIn() {
   const { add } = useCheckIns();
   const { profile } = useProfile();
   const [picked, setPicked] = useState("");
+  useEffect(() => write(MISSED_SEEN, new Date().toDateString()), []);
 
   function backfill(d: (typeof DAYS)[number]) {
     setPicked(d.id);

@@ -19,7 +19,8 @@ export default function EyesClosed() {
   const [phase, setPhase] = useState<"in" | "out">("in");
   const [paused, setPaused] = useState(false);
   const [dim, setDim] = useState(false);
-  const [canBuzz] = useState(() => typeof navigator !== "undefined" && "vibrate" in navigator);
+  const [canBuzz, setCanBuzz] = useState(true);
+  useEffect(() => setCanBuzz("vibrate" in navigator), []); // eslint-disable-line react-hooks/set-state-in-effect -- feature check after mount
   const t = useRef<ReturnType<typeof setTimeout>>(undefined);
 
   useEffect(() => {

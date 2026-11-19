@@ -1,16 +1,19 @@
 @import "tailwindcss";
 
 /* Helvetica Now Display is licensed and not committed. Drop the files into public/fonts/ (git-ignored). */
+/* Licensed font: until HelveticaNowDisplay-{Regular,Medium}.ttf are added to public/fonts, only an installed
+   copy is used (no 404s) and the fallback stack applies. When the files land, add back:
+   url("/fonts/HelveticaNowDisplay-Regular.ttf") format("truetype") / -Medium.ttf. */
 @font-face {
   font-family: "Helvetica Now Display";
-  src: url("/fonts/HelveticaNowDisplay-Regular.ttf") format("truetype");
+  src: local("Helvetica Now Display"), local("HelveticaNowDisplay-Regular");
   font-weight: 400;
   font-style: normal;
   font-display: swap;
 }
 @font-face {
   font-family: "Helvetica Now Display";
-  src: url("/fonts/HelveticaNowDisplay-Medium.ttf") format("truetype");
+  src: local("Helvetica Now Display Medium"), local("HelveticaNowDisplay-Medium");
   font-weight: 500;
   font-style: normal;
   font-display: swap;

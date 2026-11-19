@@ -1,5 +1,6 @@
 "use client";
 
+import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { FigmaIcon, FigmaToggle, FlowHeader, RowCard, Tile } from "@/components/figma/parts";
@@ -105,6 +106,16 @@ export default function Patterns() {
           </div>
         </>
       )}
+      <Link href="/insights/week" className="flex w-full items-center gap-3 rounded-[18px] border border-white bg-white/78 p-3 shadow-[0_10px_26px_rgba(21,26,19,0.07)] backdrop-blur-[12px]">
+        <Tile size={34} radius={11} bg="bg-sky-soft">
+          <FigmaIcon name="calendar-limedeep" size={18} />
+        </Tile>
+        <span className="flex flex-1 flex-col gap-0.5">
+          <span className="type-label-m text-t1">Your week in feelings</span>
+          <span className="type-caption text-t3">Every Sunday · what helped</span>
+        </span>
+        <FigmaIcon name="chevron-right" size={18} />
+      </Link>
       <p className="type-caption text-t3">Patterns, not a diagnosis.</p>
     </FigmaScreen>
   );

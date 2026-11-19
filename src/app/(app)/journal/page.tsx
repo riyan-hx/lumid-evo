@@ -1,5 +1,6 @@
 "use client";
 
+import Link from "next/link";
 import { useState } from "react";
 import { FigmaIcon, GlassCard, Tile } from "@/components/figma/parts";
 import { FigmaScreen } from "@/components/figma/screen";
@@ -51,9 +52,14 @@ export default function Journal() {
 
   return (
     <FigmaScreen gap={12} className="pb-[110px]">
-      <div className="flex w-full flex-col gap-px">
-        <p className="type-label-m text-t1">Mood journal</p>
-        <p className="type-caption text-t3">{month}</p>
+      <div className="flex w-full items-center">
+        <div className="flex flex-1 flex-col gap-px">
+          <p className="type-label-m text-t1">Mood journal</p>
+          <p className="type-caption text-t3">{month}</p>
+        </div>
+        <Link href="/insights" className="type-label-m text-lime-deep">
+          Patterns
+        </Link>
       </div>
       <div role="tablist" className="flex w-full gap-2">
         {(["Week", "Month", "Year"] as Range[]).map((r) => (

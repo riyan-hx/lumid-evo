@@ -1,7 +1,7 @@
 "use client";
 
 import { useRouter } from "next/navigation";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { FlowHeader } from "@/components/figma/parts";
 import { FigmaScreen, Grow } from "@/components/figma/screen";
 import { SoftChip } from "@/components/ui/controls";
@@ -12,10 +12,16 @@ const ANSWERS = ["Not at all", "Several days", "More than half", "Nearly every d
 const THRESHOLD = 3;
 
 /** C9 · Two-week check (opt-in) — Figma node 136:2883 */
+import { TWO_WEEK_DONE } from "@/lib/checkin-route";
+import { write } from "@/lib/store";
+
 export default function TwoWeekCheck() {
   const router = useRouter();
   const [scores, setScores] = useState<(number | null)[]>([null, null]);
   const complete = scores.every((s) => s !== null);
+  useEffect(() => {
+    if (complete) write(TWO_WEEK_DONE, new Date().toISOString());
+  }, [complete]);
   const total = scores.reduce<number>((a, s) => a + (s ?? 0), 0);
 
   return (

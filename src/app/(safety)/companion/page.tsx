@@ -34,8 +34,8 @@ export default function Companion() {
           </p>
         </div>
       </div>
-      <p className="w-full text-center type-label-m text-white/80">{now.toLocaleDateString("en-GB", { weekday: "long", day: "numeric", month: "long" })}</p>
-      <p className="w-full text-center text-[84px] leading-[1.1] font-medium tracking-[-2.1px] text-white">{now.toLocaleTimeString("en-US", { hour: "numeric", minute: "2-digit", hour12: true }).replace(/\s?[AP]M$/, "")}</p>
+      <p className="w-full text-center type-label-m text-white/80" suppressHydrationWarning>{now.toLocaleDateString("en-GB", { weekday: "long", day: "numeric", month: "long" })}</p>
+      <p className="w-full text-center text-[84px] leading-[1.1] font-medium tracking-[-2.1px] text-white" suppressHydrationWarning>{now.toLocaleTimeString("en-US", { hour: "numeric", minute: "2-digit", hour12: true }).replace(/\s?[AP]M$/, "")}</p>
       <Grow />
       <div className="flex w-full flex-col gap-3 rounded-[28px] border border-white/20 bg-white/12 p-4 backdrop-blur-[12px]" aria-live="polite">
         <div className="flex items-center gap-2.5">

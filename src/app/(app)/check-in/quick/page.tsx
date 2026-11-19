@@ -49,13 +49,18 @@ export default function QuickCheckIn() {
 
   return (
     <FigmaScreen gap={12} pt={70} mood="night">
-      <p className="text-center type-body-m text-lime-soft">{date}</p>
-      <p className="text-center text-[88px] leading-none font-medium tracking-[-2.2px] text-white">{time}</p>
+      <p className="text-center type-body-m text-lime-soft" suppressHydrationWarning>
+        {date}
+      </p>
+      <p className="text-center text-[88px] leading-none font-medium tracking-[-2.2px] text-white" suppressHydrationWarning>
+        {time}
+      </p>
       <Grow />
       <div className="flex w-full flex-col gap-3 rounded-[28px] border border-white/20 bg-white/12 p-4 backdrop-blur-[12px]">
         <div className="flex items-center gap-2.5">
           <Orb size={28} />
-          <p className="flex-1 type-label-s text-lime">Evo · How&apos;s your {part(now.getHours())}?</p>
+          <p className="flex-1 type-label-s text-lime" suppressHydrationWarning>
+            Evo · How&apos;s your {part(now.getHours())}?</p>
         </div>
         <div role="radiogroup" aria-label="Mood" className="flex w-full gap-1.5">
           {MOODS.map((m) => {

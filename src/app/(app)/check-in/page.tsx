@@ -328,7 +328,7 @@ function ClassicCheckIn() {
         className="cursor-pointer text-center type-label-m text-t2"
         onClick={() => {
           toast.show("Saved to your journal");
-          router.push("/home");
+          router.push("/journal");
         }}
       >
         That&apos;s enough for now

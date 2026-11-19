@@ -9,7 +9,8 @@ import { FigmaScreen, Grow } from "@/components/figma/screen";
 import { Orb } from "@/components/ui/orb";
 import { type ChatMode, dayLabel, useChats } from "@/lib/chat";
 import { useCheckIns } from "@/lib/checkins";
-import { STYLE_HREF, useProfile } from "@/lib/profile";
+import { checkinHref } from "@/lib/checkin-route";
+import { useProfile } from "@/lib/profile";
 
 const WAYS: { mode: ChatMode; icon: string; bg: string; title: string; note: string }[] = [
   { mode: "talk", icon: "chat-lav-19", bg: "bg-lavender-soft", title: "Talk it through", note: "Questions, gently" },
@@ -60,7 +61,7 @@ export default function ChatHome() {
           <Link href={recent ? "/chat/live?mode=talk&from=checkin" : "/chat/live?mode=talk"} className="rounded-full px-4 py-2.5 type-label-m text-forest" style={{ backgroundImage: "linear-gradient(160.78deg, rgb(163,226,125) 0%, rgb(98,191,59) 71.429%)" }}>
             {recent ? "Yes, let's talk" : "Just talk"}
           </Link>
-          <Link href={recent ? "/chat/live?mode=talk" : STYLE_HREF[profile.checkinStyle]} className="rounded-full border border-white/22 bg-white/12 px-4 py-2.5 type-label-m text-white">
+          <Link href={recent ? "/chat/live?mode=talk" : checkinHref(profile.checkinStyle, items)} className="rounded-full border border-white/22 bg-white/12 px-4 py-2.5 type-label-m text-white">
             {recent ? "Something else" : "Check in first"}
           </Link>
         </div>
