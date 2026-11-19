@@ -226,3 +226,31 @@ body {
     animation: none;
   }
 }
+
+/* Intensity slider (IntensitySlider) */
+.evo-range::-webkit-slider-runnable-track {
+  height: 8px;
+  border-radius: 4px;
+  background: linear-gradient(90deg, var(--color-lime) var(--fill), var(--color-sky-soft) var(--fill));
+}
+.evo-range::-moz-range-track {
+  height: 8px;
+  border-radius: 4px;
+  background: linear-gradient(90deg, var(--color-lime) var(--fill), var(--color-sky-soft) var(--fill));
+}
+.evo-range::-webkit-slider-thumb {
+  appearance: none;
+  margin-top: -7px;
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  background: #fff;
+  border: 3px solid var(--color-lime-deep);
+}
+.evo-range::-moz-range-thumb {
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  background: #fff;
+  border: 3px solid var(--color-lime-deep);
+}
