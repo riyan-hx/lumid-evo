@@ -169,7 +169,7 @@ export default function GoodThings() {
         className="w-full"
         onClick={() => {
           toast.show("Saved · sleep well");
-          router.push("/calm");
+          router.push("/calm/wind-down");
         }}
       />
     </FigmaScreen>

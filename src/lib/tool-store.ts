@@ -86,3 +86,27 @@ export function ideaNote(text: string) {
   if (/(ignore|wait|nothing)/.test(t)) return "Easy now · may grow";
   return "Worth a try";
 }
+
+/** Wind-down nights (6.6): one entry per night, for the "3rd night in a row" streak. */
+export const windDowns = {
+  all: () => read<string[]>("evo.winddown.v1", []),
+  add: () => {
+    const today = new Date().toDateString();
+    const list = windDowns.all().filter((d) => d !== today);
+    write("evo.winddown.v1", [today, ...list].slice(0, 60));
+  },
+  /** Consecutive nights ending tonight (counting tonight). */
+  streak: () => {
+    const set = new Set(windDowns.all());
+    set.add(new Date().toDateString());
+    let n = 0;
+    const d = new Date();
+    while (set.has(d.toDateString())) {
+      n++;
+      d.setDate(d.getDate() - 1);
+    }
+    return n;
+  },
+};
+
+export const ordinal = (n: number) => `${n}${["th", "st", "nd", "rd"][n % 100 > 10 && n % 100 < 14 ? 0 : n % 10 < 4 ? n % 10 : 0]}`;
