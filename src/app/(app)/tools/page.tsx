@@ -9,7 +9,7 @@ import { SoftChip } from "@/components/ui/controls";
 import { useCheckIns } from "@/lib/checkins";
 
 type Need = "Thoughts spiralling" | "Feeling too much" | "Can't get going" | "Hard on myself" | "Can't sleep";
-type ToolId = "thought" | "worry" | "problem" | "compassion" | "values";
+type ToolId = "thought" | "worry" | "problem" | "compassion" | "values" | "activity" | "good";
 
 const NEEDS: Need[] = ["Thoughts spiralling", "Feeling too much", "Can't get going", "Hard on myself", "Can't sleep"];
 const TOOLS: Record<ToolId, { title: string; note: string; icon: string; bg: string; tag: string; href: string }> = {
@@ -17,15 +17,17 @@ const TOOLS: Record<ToolId, { title: string; note: string; icon: string; bg: str
   worry: { title: "Worry time", note: "Park worries for later · 2 min", icon: "parking-sun-20", bg: "bg-sun-soft", tag: "CBT", href: "/tools/worry" },
   problem: { title: "Solve one problem", note: "Five small steps · 6 min", icon: "idea-sky-20", bg: "bg-sky-soft", tag: "CBT", href: "/tools/problem" },
   compassion: { title: "Self-compassion break", note: "Three kind sentences · 2 min", icon: "heart-peach-20", bg: "bg-peach-soft", tag: "CFT", href: "/tools/compassion" },
+  activity: { title: "Lift your mood", note: "Plan one good thing · 3 min", icon: "leaf-limedeep-19", bg: "bg-lime-soft", tag: "BA", href: "/tools/activity" },
+  good: { title: "Three good things", note: "Before bed · 2 min", icon: "star-sun-18", bg: "bg-sun-soft", tag: "PP", href: "/tools/good-things" },
   values: { title: "What matters to you", note: "Your values compass · 4 min", icon: "compass-mint-20", bg: "bg-mint-soft", tag: "ACT", href: "/tools/values" },
 };
 /** Evidence-based order per need: the first tool is the one most likely to help. */
 const ORDER: Record<Need, ToolId[]> = {
   "Thoughts spiralling": ["thought", "worry", "problem", "compassion", "values"],
   "Feeling too much": ["compassion", "worry", "thought", "values", "problem"],
-  "Can't get going": ["problem", "values", "compassion", "thought", "worry"],
+  "Can't get going": ["activity", "problem", "values", "compassion", "thought"],
   "Hard on myself": ["compassion", "thought", "values", "worry", "problem"],
-  "Can't sleep": ["worry", "compassion", "thought", "problem", "values"],
+  "Can't sleep": ["worry", "good", "compassion", "thought", "problem"],
 };
 
 function needFor(feeling?: string): Need {
