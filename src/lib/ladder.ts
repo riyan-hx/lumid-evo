@@ -1,7 +1,7 @@
 /** Small steps when stuck (7.1–7.6). One active ladder, kept on the device. */
 export type Rung = { text: string; dread: number };
 export type Done = { text: string; expected: number; actual: number; at: string };
-export type Ladder = { goal: string; rungs: Rung[]; current: number; moment?: string; song?: boolean; expected?: number; history: Done[]; plannedAt?: string };
+export type Ladder = { goal: string; rungs: Rung[]; current: number; moment?: string; song?: boolean; expected?: number; history: Done[]; plannedAt?: string; momentAt?: string };
 
 const KEY = "evo.ladder.v1";
 
@@ -63,3 +63,10 @@ export function pickRung(rungs: Rung[], history: Done[]) {
 }
 
 export const hardLabel = (n: number) => (n <= 2 ? "Easy" : n <= 4 ? "A little effort" : n <= 6 ? "Some effort" : n <= 8 ? "Really hard" : "Very hard");
+
+/** 8.7: a step tied to a moment that has passed (a day on) with nothing done since → offer a smaller one. */
+export function missedStep(l: Ladder, now = Date.now()) {
+  if (!l.moment || !l.momentAt || l.current >= l.rungs.length - 1) return false;
+  const at = new Date(l.momentAt).getTime();
+  return now - at > 864e5 && !l.history.some((h) => new Date(h.at).getTime() > at);
+}

@@ -2,13 +2,15 @@
 
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { FigmaIcon, Tile } from "@/components/figma/parts";
 import { FigmaScreen } from "@/components/figma/screen";
+import { RoughDay } from "@/components/safety/rough-day";
 import { SoftChip } from "@/components/ui/controls";
 import { Orb } from "@/components/ui/orb";
 import { useCheckIns } from "@/lib/checkins";
 import { STYLE_HREF, useProfile } from "@/lib/profile";
+import { safety } from "@/lib/safety";
 
 const part = (h: number) => (h < 12 ? "morning" : h < 17 ? "afternoon" : "evening");
 
@@ -19,11 +21,18 @@ export default function Home() {
   const { items } = useCheckIns();
   const [hideAsk, setHideAsk] = useState(false);
   const [text, setText] = useState("");
+  const [rough, setRough] = useState<boolean | null>(null);
+  useEffect(() => {
+    if (safety.needsReturn()) return router.replace("/safety/return");
+    setRough(safety.isPaused()); // eslint-disable-line react-hooks/set-state-in-effect -- one-time read of device storage
+  }, [router]);
   const now = new Date();
   const p = part(now.getHours());
   const date = new Intl.DateTimeFormat("en-GB", { weekday: "long", day: "numeric", month: "short" }).format(now).replace(" ", ", ");
   const time = new Intl.DateTimeFormat("en-GB", { hour: "numeric", minute: "2-digit", hour12: true }).format(now).toUpperCase();
   const last = items[0];
+  if (rough === null) return <FigmaScreen>{null}</FigmaScreen>;
+  if (rough) return <RoughDay />;
 
   // Brief lines come from the person's own data (insights engine later); never invented facts.
   const lines = [

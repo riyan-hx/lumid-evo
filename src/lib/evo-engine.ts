@@ -1,4 +1,5 @@
 import type { Chat, ChatMode, Part, PartBody } from "./chat";
+import { HEAVY } from "./safety";
 
 /**
  * Evo's on-device conversation engine. Deterministic and rule-based so it works offline and every
@@ -13,6 +14,8 @@ export type ChatEvent = { kind: "text"; text: string } | { kind: "pick"; part: P
 /** Chips that leave the chat. The page resolves {id}. */
 export const CHIP_LINKS: Record<string, string> = {
   "Open my safety plan": "/safety",
+  "Show me support now": "/crisis",
+  "Message someone I trust": "/safety/reach-out",
   "Call Tele-MANAS 14416": "tel:14416",
   "Pick a small step": "/chat/step?id={id}",
   "Wrap up": "/chat/summary?id={id}",
@@ -142,6 +145,7 @@ function onText(chat: Chat, text: string): Reply {
       patch: { ...patch, stage: "safety" },
     };
   }
+  if (HEAVY.test(text)) return { parts: [me, { t: "softcheck" }], patch: { ...patch, stage: "safety-soft" } };
   if (REPAIR.test(text)) return { parts: [me, ...repair()], patch: { ...patch, stage: undefined } };
 
   if (chat.stage === "ev-for") return { parts: [me, { t: "evo", text: "And what doesn't fit it? Anything at all — even small things." }], patch: { ...patch, stage: "ev-against", evidenceFor: text } };
@@ -252,6 +256,8 @@ function onPick(chat: Chat, part: Part, value: string): Reply {
       if (value === "No — I'm just exhausted")
         return { parts: [me(value), { t: "evo", text: "Thank you for telling me. Exhausted makes everything feel pointless. Want to rest your body for a minute, or keep talking?" }, { t: "chips", options: ["Calm me first", "Keep talking"], indent: true }], patch: { stage: undefined } };
       return { parts: [me(value), { t: "evo", text: "That's okay. I'm here either way — and a real person is always one tap away." }], patch: { stage: undefined } };
+    case "softcheck":
+      return { parts: [me(value), { t: "evo", text: "Thank you for telling me. Exhausted makes everything feel heavier. Want to rest your body for a minute, or keep talking?" }, { t: "chips", options: ["Calm me first", "Keep talking"], indent: true }], patch: { stage: undefined } };
     case "repair":
       if (value === "Just listen for a while") return { parts: [{ t: "status", text: "Evo switched to listening mode" }, { t: "evo", text: "I'm here. Say as much or as little as you want." }], patch: { listening: true } };
       if (value === "Say things more simply") return { parts: [{ t: "status", text: "Evo will keep things simple" }, { t: "evo", text: "Okay. Short and simple. What's hardest right now?" }], patch: { simpler: true } };

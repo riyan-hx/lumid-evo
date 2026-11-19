@@ -8,7 +8,7 @@ import { useToast } from "@/components/states/toast";
 import { Orb } from "@/components/ui/orb";
 import { Pill } from "@/components/ui/pill";
 import { useChats } from "@/lib/chat";
-import { type Ladder, loadLadder, saveLadder } from "@/lib/ladder";
+import { type Ladder, loadLadder, missedStep, saveLadder } from "@/lib/ladder";
 
 /** Days since the ladder was planned, in words ("four days"). */
 const WORDS = ["", "a day", "two days", "three days", "four days", "five days", "six days", "a week"];
@@ -24,6 +24,7 @@ export default function TwoMinuteStart() {
   useEffect(() => {
     if (!ready) return;
     const saved = loadLadder();
+    if (saved && missedStep(saved)) return router.replace("/ladder/reset");
     if (saved) return void setL(saved); // eslint-disable-line react-hooks/set-state-in-effect -- one-time read of device storage
     const pending = chats.find((c) => c.step && !c.step.done)?.step;
     router.replace(pending ? `/ladder/build?goal=${encodeURIComponent(pending.text)}` : "/ladder/build");

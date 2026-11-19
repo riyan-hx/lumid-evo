@@ -81,7 +81,7 @@ export default function Moment() {
         label="Set my moment"
         className="w-full"
         onClick={() => {
-          saveLadder({ ...l, moment, song });
+          saveLadder({ ...l, moment, song, momentAt: new Date().toISOString() });
           toast.show(`Set for ${moment.toLowerCase()}`);
           router.push("/ladder");
         }}

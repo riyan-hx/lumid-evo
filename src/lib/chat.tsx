@@ -30,7 +30,8 @@ export type PartBody =
   | { t: "parked"; what: string; when: string }
   | { t: "status"; text: string }
   | { t: "repair"; picked?: string }
-  | { t: "nightChips"; picked?: string };
+  | { t: "nightChips"; picked?: string }
+  | { t: "softcheck"; picked?: string };
 export type Part = { id: string } & PartBody;
 
 export type Feeling = { name: string; start: number; end?: number };

@@ -21,6 +21,8 @@ import {
   PhoneRow,
   RepairRows,
   SafetyCard,
+  SoftCheckCard,
+  SupportPill,
   ScaleRow,
   StatusPill,
   TrapCard,
@@ -32,6 +34,7 @@ import { type Chat, type ChatMode, isLateNight, MODE_LABEL, type Part, useChats,
 import { useCheckIns } from "@/lib/checkins";
 import { CHIP_LINKS, type ChatEvent, helpOffer, opening, repairReply, type Reply, respond, simplify, suggestionReply } from "@/lib/evo-engine";
 import { TONE_LABEL, useProfile } from "@/lib/profile";
+import { CLEAR_RISK } from "@/lib/safety";
 
 const MODES: ChatMode[] = ["talk", "listen", "untangle", "calm", "night"];
 
@@ -40,6 +43,7 @@ function subtitle(c: Chat, tone: string) {
   if (c.mode === "listen") return "No advice unless you ask";
   if (c.mode === "untangle") return "Untangle a thought · CBT";
   if (c.mode === "calm") return "Calm me first";
+  if (c.stage === "safety-soft") return "Here with you";
   if (c.stage?.startsWith("safety")) return "Talk it through · slowing down";
   return `Talk it through · ${c.listening ? "listening" : tone}`;
 }
@@ -171,8 +175,8 @@ function Live() {
   }
 
   return (
-    <FigmaScreen gap={12} mood={dark ? "latenight" : chat.mode === "calm" || chat.listening ? "calm" : chat.stage?.startsWith("safety") ? "warm" : "day"}>
-      <ChatHeader title={chat.mode === "listen" ? "Just listening" : "Evo"} sub={subtitle(chat, TONE_LABEL[profile.chatTone])} dark={dark} onBack={() => router.push("/chat")} onMore={() => setMenu(true)} />
+    <FigmaScreen gap={12} mood={dark ? "latenight" : chat.mode === "calm" || chat.listening ? "calm" : chat.stage === "safety-soft" ? "calm" : chat.stage?.startsWith("safety") ? "warm" : "day"}>
+      <ChatHeader title={chat.mode === "listen" ? "Just listening" : "Evo"} sub={subtitle(chat, TONE_LABEL[profile.chatTone])} dark={dark} onBack={() => router.push("/chat")} onMore={() => setMenu(true)} trailing={chat.stage === "safety-soft" ? <SupportPill /> : undefined} />
       {chat.mode === "listen" && <ListeningPill />}
       {dark && (
         <div className="flex items-center gap-1.5 self-start rounded-full bg-white/10 px-3 py-1.5">
@@ -216,6 +220,7 @@ function Live() {
             {p.t === "parked" && <ParkedCard what={p.what} when={p.when} />}
             {p.t === "status" && <StatusPill text={p.text} />}
             {p.t === "repair" && <RepairRows picked={p.picked} onPick={(v) => pick(p, v)} />}
+            {p.t === "softcheck" && <SoftCheckCard picked={p.picked} onPick={(v) => pick(p, v)} />}
             {p.t === "nightChips" && <NightChips picked={p.picked} onPick={(v) => pick(p, v)} />}
           </div>
         ))}
@@ -233,7 +238,15 @@ function Live() {
           }}
         />
       )}
-      <Composer dark={dark} placeholder={placeholder(chat)} onPlus={() => router.push("/chat/style")} onSend={(text) => !typing && act({ kind: "text", text })} />
+      <Composer dark={dark} placeholder={placeholder(chat)} onPlus={() => router.push("/chat/style")} onSend={(text) => {
+          if (typing) return;
+          // Clear risk: stop the conversation and open the full-screen safety moment (8.3).
+          if (CLEAR_RISK.test(text)) {
+            update(chat.id, (ch) => ({ ...ch, stage: "safety", parts: [...ch.parts, ...withIds([{ t: "me", text }])] }));
+            return router.push(`/safety/moment?q=${encodeURIComponent(text)}&chat=${chat.id}`);
+          }
+          act({ kind: "text", text });
+        }} />
 
       {actions && <MessageActions text={actions.part.text} top={actions.top} reaction={chat.reactions?.[actions.part.id]} onReact={react} onAction={onAction} onClose={() => setActions(null)} />}
       {menu && (

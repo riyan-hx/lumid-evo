@@ -14,7 +14,7 @@ import { haptic } from "@/lib/motion";
 
 const ROUND_BTN = "flex size-11 shrink-0 cursor-pointer items-center justify-center rounded-[22px] border backdrop-blur-[12px]";
 
-export function ChatHeader({ sub, onBack, onMore, dark, backIcon = "chevron-left", title = "Evo", orb = true }: { sub: string; onBack: () => void; onMore?: () => void; dark?: boolean; backIcon?: "chevron-left" | "close"; title?: string; orb?: boolean }) {
+export function ChatHeader({ sub, onBack, onMore, dark, backIcon = "chevron-left", title = "Evo", orb = true, trailing }: { sub: string; onBack: () => void; onMore?: () => void; dark?: boolean; backIcon?: "chevron-left" | "close"; title?: string; orb?: boolean; trailing?: ReactNode }) {
   const btn = cn(ROUND_BTN, dark ? "border-white/20 bg-white/12" : "border-white bg-surface");
   return (
     <div className="flex w-full items-center gap-2.5">
@@ -26,7 +26,8 @@ export function ChatHeader({ sub, onBack, onMore, dark, backIcon = "chevron-left
         <p className={cn("type-label-m", dark ? "text-white" : "text-t1")}>{title}</p>
         <p className={cn("truncate type-caption", dark ? "text-lime" : "text-t3")}>{sub}</p>
       </div>
-      {onMore && (
+      {trailing}
+      {!trailing && onMore && (
         <button type="button" aria-label="More options" onClick={onMore} className={btn}>
           <FigmaIcon name={dark ? "more-white-20" : "more-20"} size={20} />
         </button>
@@ -580,5 +581,39 @@ export function SmallToggle({ on, onChange, label }: { on: boolean; onChange: (v
     <button type="button" role="switch" aria-checked={on} aria-label={label} onClick={() => onChange(!on)} className={cn("flex h-[26px] w-11 shrink-0 cursor-pointer items-center rounded-[13px] p-[3px] transition-colors duration-200", on ? "justify-end bg-lime-deep" : "bg-line-strong")}>
       <span className="size-5 rounded-[10px] bg-surface" />
     </button>
+  );
+}
+
+/** 8.2 · Soft check-in: something sounds this heavy, even without crisis words. */
+export function SoftCheckCard({ picked, onPick }: { picked?: string; onPick: (v: string) => void }) {
+  const opts: { label: string; variant: "forest" | "glass" }[] = [
+    { label: "Show me support now", variant: "forest" },
+    { label: "Message someone I trust", variant: "glass" },
+    { label: "I'm okay, just exhausted", variant: "glass" },
+  ];
+  return (
+    <div className="flex w-full flex-col gap-3">
+      <div className="flex w-full flex-col gap-3 rounded-[28px] border border-peach-soft bg-peach-subtle p-[18px] shadow-[0_18px_34px_-12px_rgba(21,26,19,0.12)]">
+        <div className="flex items-center gap-2.5">
+          <Orb size={32} />
+          <p className="type-label-m text-peach-text">Evo</p>
+        </div>
+        <p className="type-title-l text-forest">That sounds really heavy. I want to make sure you&apos;re okay right now.</p>
+        {opts.map((o) => (
+          <Pill key={o.label} label={o.label} variant={o.variant} icon={null} disabled={!!picked && picked !== o.label} className="w-full" onClick={() => onPick(o.label)} />
+        ))}
+      </div>
+      <p className="type-caption text-t3">Evo checks in whenever something sounds this heavy — even without &quot;crisis words&quot;. Saying you&apos;re okay is always fine.</p>
+    </div>
+  );
+}
+
+/** Peach "Support" pill used in chat headers during a safety moment (8.2). */
+export function SupportPill() {
+  return (
+    <Link href="/crisis" className="flex items-center gap-1.5 rounded-full bg-peach-soft px-3 py-2">
+      <FigmaIcon name="lifebuoy-peach-14" size={14} />
+      <span className="type-label-s text-peach-text">Support</span>
+    </Link>
   );
 }
