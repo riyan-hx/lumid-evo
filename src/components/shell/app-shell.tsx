@@ -1,23 +1,18 @@
 import type { ReactNode } from "react";
-import { BottomNav, CrisisLink, SideNav } from "./nav";
+import { BottomNav } from "./bottom-nav";
+import { SideNav } from "./nav";
 
 /**
- * Web shell (Dev Docs board 02).
- * Mobile: single column + bottom nav. Tablet: icon rail. Desktop: sidebar | main 720 | context panel 360.
+ * Web shell. Phones: the Figma screen edge-to-edge + the DS Bottom Nav.
+ * Tablet/desktop: side navigation + the same screen centred (Dev Docs board 02).
  */
-export function AppShell({ children, panel }: { children: ReactNode; panel?: ReactNode }) {
+export function AppShell({ children }: { children: ReactNode }) {
   return (
-    <div className="flex min-h-dvh">
+    <div className="flex min-h-dvh bg-paper">
       <SideNav />
-      <div className="flex min-w-0 flex-1 justify-center gap-8 px-4 pt-6 pb-28 md:px-8 md:pb-10">
-        <main id="main" className="w-full max-w-[480px] md:max-w-[640px] desk:max-w-[720px]">
-          <div className="mb-4 flex justify-end md:hidden">
-            <CrisisLink compact />
-          </div>
-          {children}
-        </main>
-        {panel && <aside className="sticky top-6 hidden h-fit w-[360px] shrink-0 flex-col gap-4 desk:flex">{panel}</aside>}
-      </div>
+      <main id="main" className="min-w-0 flex-1">
+        {children}
+      </main>
       <BottomNav />
     </div>
   );

@@ -37,6 +37,7 @@
   --color-subtle: #f4f6f5;
   --color-muted: #ecefed;
   --color-brand-subtle: #f2faf5;
+  --color-brand-strong: #0b3b2c; /* bg/brand-strong (Bottom Nav active) */
   --color-danger-subtle: #fdecec;
 
   --color-line: #ecefed; /* border/default */

@@ -1,29 +1,36 @@
 import Link from "next/link";
+import { ImageSlot } from "@/components/figma/parts";
+import { FigmaScreen, Grow } from "@/components/figma/screen";
 import { Orb } from "@/components/ui/orb";
 import { Pill } from "@/components/ui/pill";
 
-/** 1.1 · Welcome */
+const PROMPT =
+  "Soft 3D clay illustration: a young person sitting by a window at dusk, wrapped in a blanket, holding a warm cup, a small glowing lime-green orb floating beside them, calm and hopeful, palette of soft greens, cream and warm peach, lots of negative space, no text, 4:3";
+
+/** 1.1 · Welcome — Figma node 112:1292 */
 export default function Welcome() {
   return (
-    <div className="flex flex-col items-center gap-8 text-center">
-      <Orb size={140} state="breathing" />
-      <div className="flex flex-col gap-3">
-        <h1 className="type-screen-title text-forest">A calm place for heavy days.</h1>
-        <p className="type-body-l text-t2">Evo listens, helps you untangle what you feel, and finds one small next step.</p>
+    <FigmaScreen gap={16} pt={62}>
+      <div className="relative">
+        <ImageSlot prompt={PROMPT} height={290} />
+        <div className="absolute top-[238px] right-[3px]">
+          <Orb size={76} />
+        </div>
       </div>
-      <ul className="flex flex-wrap justify-center gap-2" aria-label="What makes Evo different">
+      <h1 className="text-[28px] leading-[1.1] font-medium tracking-[-0.7px] text-forest">A calm place for heavy days.</h1>
+      <p className="type-body-m text-t2">Evo listens, helps you name what you feel, and turns it into one small, kind step — using proven tools like CBT.</p>
+      <ul className="flex flex-wrap gap-2">
         {["Tap, don't type", "Malayalam + English", "Private by default"].map((t) => (
-          <li key={t} className="rounded-full border border-white bg-white/70 px-3.5 py-2 type-label-s text-t2">
+          <li key={t} className="flex h-11 items-center rounded-full border border-white bg-white/70 px-[18px] type-label-m text-t3 backdrop-blur-[8px]">
             {t}
           </li>
         ))}
       </ul>
-      <div className="flex w-full flex-col items-center gap-4">
-        <Pill label="Start with Evo" href="/sign-in" className="w-full" />
-        <Link href="/sign-in?returning=1" className="type-label-m text-t2 underline-offset-4 hover:underline">
-          I already have an account
-        </Link>
-      </div>
-    </div>
+      <Grow />
+      <Pill label="Start with Evo" href="/sign-in" className="w-full" />
+      <Link href="/sign-in?returning=1" className="text-center type-label-m text-t2">
+        I already have an account
+      </Link>
+    </FigmaScreen>
   );
 }

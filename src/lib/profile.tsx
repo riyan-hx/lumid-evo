@@ -1,7 +1,7 @@
 "use client";
 
 import { usePathname } from "next/navigation";
-import { createContext, useCallback, useContext, useEffect, useState, type ReactNode } from "react";
+import { createContext, useCallback, useContext, useEffect, useRef, useState, type ReactNode } from "react";
 
 export type AgeBand = "u16" | "16-17" | "18-24" | "25+";
 export type Reminder = "after-dinner" | "before-bed" | "none";
@@ -52,11 +52,15 @@ function load(): Profile {
 /** Client profile until the API lands (build step 15). Persisted per browser; safe if storage is blocked. */
 export function ProfileProvider({ children }: { children: ReactNode }) {
   const [profile, setProfile] = useState<Profile>(DEFAULT_PROFILE);
+  const hydrated = useRef(false);
   const path = usePathname();
 
   // Hydrate from storage after mount so server and client render the same first frame.
   useEffect(() => {
-    setProfile(load()); // eslint-disable-line react-hooks/set-state-in-effect -- one-time hydration from localStorage
+    if (!hydrated.current) {
+      hydrated.current = true;
+      setProfile(load());
+    }
   }, []);
 
   // Discreet mode: neutral tab title (Dev Docs board 02). Next.js rewrites <title> on navigation,
@@ -74,7 +78,10 @@ export function ProfileProvider({ children }: { children: ReactNode }) {
 
   const update = useCallback((patch: Partial<Profile>) => {
     setProfile((p) => {
-      const next = { ...p, ...patch };
+      // Child effects can run before hydration: never overwrite stored data with defaults.
+      const base = hydrated.current ? p : load();
+      hydrated.current = true;
+      const next = { ...base, ...patch };
       try {
         localStorage.setItem(KEY, JSON.stringify(next));
       } catch {}

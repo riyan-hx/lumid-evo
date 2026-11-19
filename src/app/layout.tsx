@@ -1,6 +1,7 @@
 import type { Metadata, Viewport } from "next";
 import { OfflineBanner } from "@/components/states/offline-banner";
 import { ToastProvider } from "@/components/states/toast";
+import { CheckInProvider } from "@/lib/checkins";
 import { ProfileProvider } from "@/lib/profile";
 import "./globals.css";
 
@@ -22,10 +23,12 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
     <html lang="en" className="antialiased">
       <body className="bg-paper font-sans text-t1">
         <ProfileProvider>
+          <CheckInProvider>
           <ToastProvider>
             <OfflineBanner />
             {children}
           </ToastProvider>
+          </CheckInProvider>
         </ProfileProvider>
       </body>
     </html>

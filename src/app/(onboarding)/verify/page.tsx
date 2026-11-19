@@ -3,7 +3,9 @@
 import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
 import { Suspense, useEffect, useRef, useState } from "react";
-import { Heading, StepHeader } from "@/components/onboarding/step-header";
+import { BackRow, Body, FigmaIcon, GlassCard, Tile, Title } from "@/components/figma/parts";
+import { FigmaScreen, Grow } from "@/components/figma/screen";
+import { SoftChip } from "@/components/ui/controls";
 import { Pill } from "@/components/ui/pill";
 import { DEV_CODE, sendCode, verifyCode } from "@/lib/api/auth";
 import { cn } from "@/lib/cn";
@@ -12,7 +14,7 @@ import { useProfile } from "@/lib/profile";
 const LEN = 6;
 const MAX_TRIES = 5;
 
-/** 1.2 → 1.3 · Verify code (wrong / expired / locked states) */
+/** 1.3 · Code (incl. wrong-code state) — Figma node 112:1421 */
 function Verify() {
   const router = useRouter();
   const returning = useSearchParams().get("returning");
@@ -29,6 +31,13 @@ function Verify() {
     return () => clearTimeout(t);
   }, [resendIn]);
 
+  useEffect(() => {
+    if (state === "wrong") {
+      input.current?.focus();
+      input.current?.select(); // the next code replaces the wrong one
+    }
+  }, [state]);
+
   async function check(value: string) {
     setState("checking");
     const res = await verifyCode(profile.phone, value);
@@ -42,13 +51,7 @@ function Verify() {
     const n = tries + 1;
     setTries(n);
     setState(n >= MAX_TRIES ? "locked" : "wrong");
-    setCode("");
   }
-
-  // Refocus once the input is re-enabled after a wrong code.
-  useEffect(() => {
-    if (state === "wrong") input.current?.focus();
-  }, [state]);
 
   function onChange(v: string) {
     const d = v.replace(/\D/g, "").slice(0, LEN);
@@ -57,19 +60,21 @@ function Verify() {
     if (d.length === LEN) check(d);
   }
 
+  const wrong = state === "wrong" || state === "locked";
   const pretty = profile.phone ? `+91 ${profile.phone.slice(0, 5)} ${profile.phone.slice(5)}` : "your number";
+  const left = MAX_TRIES - tries;
 
   return (
-    <div>
-      <StepHeader back="/sign-in" />
-      <Heading title="Enter the 6-digit code" />
-      <p className="-mt-4 mb-6 type-body-m text-t2">
+    <FigmaScreen gap={18}>
+      <BackRow href="/sign-in" />
+      <Title>Enter the 6-digit code</Title>
+      <Body>
         Sent to {pretty} ·{" "}
-        <Link href="/sign-in" className="text-lime-deep">
+        <Link href="/sign-in" className="underline-offset-2 hover:underline">
           Change
         </Link>
-      </p>
-      <label className="relative block" onClick={() => input.current?.focus()}>
+      </Body>
+      <label className="relative flex w-full gap-2">
         <span className="sr-only">One-time code</span>
         <input
           ref={input}
@@ -79,45 +84,54 @@ function Verify() {
           value={code}
           disabled={state === "locked" || state === "checking"}
           onChange={(e) => onChange(e.target.value)}
-          className="absolute inset-0 opacity-0"
+          className="absolute inset-0 z-10 cursor-text opacity-0"
         />
-        <div className={cn("flex justify-between gap-2", state === "wrong" && "motion-safe:animate-[shake_0.3s]")} aria-hidden>
-          {Array.from({ length: LEN }, (_, i) => (
-            <span
-              key={i}
-              className={cn(
-                "flex h-14 flex-1 items-center justify-center rounded-[16px] border bg-white/80 type-title-m",
-                state === "wrong" ? "border-peach-solid" : i === code.length ? "border-lime-deep" : "border-white",
-              )}
-            >
-              {code[i] ?? ""}
-            </span>
-          ))}
-        </div>
+        {Array.from({ length: LEN }, (_, i) => (
+          <span
+            key={i}
+            aria-hidden
+            className={cn(
+              "flex h-[58px] flex-1 items-center justify-center rounded-[16px] border-[1.5px] bg-surface text-[22px] leading-[28px] font-medium tracking-[-0.088px] text-t1",
+              wrong ? "border-t-danger" : i === code.length ? "border-lime" : "border-white",
+            )}
+          >
+            {code[i] ?? ""}
+          </span>
+        ))}
       </label>
-      <div className="mt-3 min-h-10" role="status">
-        {state === "wrong" && <p className="type-body-s text-t-danger">That code didn&apos;t match. Try again or get a new one.</p>}
-        {state === "locked" && <p className="type-body-s text-t-danger">Too many tries. Wait 15 minutes, or ask for help below.</p>}
-        {state === "checking" && <p className="type-body-s text-t3">Checking…</p>}
-        <p className="type-caption text-t3">Codes work for 10 minutes. A new code replaces the old one.</p>
-        {process.env.NODE_ENV !== "production" && <p className="type-caption text-lime-deep">Dev: use {DEV_CODE}</p>}
-      </div>
-      <div className="mt-6 flex flex-col gap-3">
-        <Pill
+      {wrong && (
+        <div role="alert" className="flex w-full items-center gap-2.5 rounded-[16px] bg-danger-subtle p-3">
+          <FigmaIcon name="alert-danger" size={20} />
+          <p className="flex-1 type-body-s text-t-danger">
+            {state === "locked" ? "Too many tries. Wait 15 minutes, or get help below." : `That code didn't match. ${left} tries left — take your time.`}
+          </p>
+        </div>
+      )}
+      <div className="flex w-full gap-2">
+        <SoftChip
           label={resendIn > 0 ? `Resend in 0:${String(resendIn).padStart(2, "0")}` : "Resend code"}
-          variant="glass"
-          icon={null}
-          disabled={resendIn > 0}
           onClick={async () => {
+            if (resendIn > 0) return;
             await sendCode(profile.phone);
             setResendIn(30);
           }}
         />
-        <Link href="mailto:help@lumid.app" className="text-center type-label-m text-t2">
-          No code? Get help
-        </Link>
+        <SoftChip label="No code? Get help" onClick={() => (window.location.href = "mailto:help@lumid.app")} />
       </div>
-    </div>
+      <GlassCard className="p-3">
+        <Tile size={36} radius={12} bg="bg-sun-soft">
+          <FigmaIcon name="clock-sun" size={19} />
+        </Tile>
+        <div className="flex flex-1 flex-col gap-0.5">
+          <p className="type-label-m text-t1">Codes work for 10 minutes</p>
+          <p className="type-caption text-t3">
+            A new code replaces the old one{process.env.NODE_ENV !== "production" ? ` · dev code ${DEV_CODE}` : ""}
+          </p>
+        </div>
+      </GlassCard>
+      <Grow />
+      <Pill label={state === "checking" ? "Checking…" : "Verify"} disabled={state === "checking" || state === "locked"} className="w-full" onClick={() => (code.length === LEN ? check(code) : input.current?.focus())} />
+    </FigmaScreen>
   );
 }
 

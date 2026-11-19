@@ -67,33 +67,3 @@ export function SideNav() {
     </nav>
   );
 }
-
-/** Mobile web < 768: bottom nav with the four designed tabs. */
-export function BottomNav() {
-  const path = usePathname();
-  return (
-    <nav
-      aria-label="Main"
-      className="glass fixed inset-x-3 bottom-[max(12px,env(safe-area-inset-bottom))] z-40 flex items-center justify-between rounded-full p-1.5 md:hidden"
-    >
-      {NAV.filter((n) => n.mobile).map((n) => {
-        const active = isActive(path, n.href);
-        return (
-          <Link
-            key={n.href}
-            href={n.href}
-            aria-current={active ? "page" : undefined}
-            aria-label={n.label}
-            className={cn(
-              "flex h-12 items-center justify-center gap-2 rounded-full type-label-m transition-all",
-              active ? "flex-[1.6] bg-forest text-white" : "flex-1 text-t2",
-            )}
-          >
-            <Icon name={n.icon} size={20} />
-            {active && n.label}
-          </Link>
-        );
-      })}
-    </nav>
-  );
-}
