@@ -1,0 +1,15 @@
+const { chromium } = require('playwright');
+(async () => { const b = await chromium.launch(); const p = await b.newPage({ viewport: { width: 390, height: 844 } }); const U=process.env.BASE_URL||'http://localhost:3000'; const S=process.argv[2]||'/tmp';
+const log=(m)=>console.log(m);
+await p.goto(U+'/'); await p.waitForURL('**/welcome'); await p.screenshot({path:S+'/o1.png'});
+await p.getByRole('button',{name:/Start with Evo/}).click(); await p.waitForURL('**/sign-in');
+await p.fill('#phone','9876543210'); await p.getByRole('button',{name:/Send code/}).click(); await p.waitForURL('**/verify'); log('verify');
+await p.keyboard.type('111111'); await p.getByText("That code didn't match").waitFor(); await p.screenshot({path:S+'/o3.png'}); log('wrong ok');
+await p.keyboard.type('123456'); await p.waitForURL('**/age'); log('age');
+await p.getByRole('radio',{name:/16 – 17/}).click(); await p.getByRole('button',{name:/Continue/}).click(); await p.waitForURL('**/guardian'); log('guardian');
+await p.goto(U+'/age'); await p.getByRole('radio',{name:/25 or older/}).click(); await p.getByRole('button',{name:/Continue/}).click(); await p.waitForURL('**/weighing');
+await p.getByRole('button',{name:'Lonely'}).click(); await p.getByRole('button',{name:/Continue/}).click(); await p.waitForURL('**/privacy'); await p.screenshot({path:S+'/o7.png'});
+await p.getByRole('button',{name:/Looks good/}).click(); await p.waitForURL('**/personalise');
+await p.getByRole('switch',{name:'Discreet mode'}).click(); await p.getByRole('button',{name:'No reminders'}).click(); await p.screenshot({path:S+'/o8.png'});
+await p.getByRole('button',{name:/^Done/}).click(); await p.waitForURL('**/first-day'); await p.waitForTimeout(500); log('title='+await p.title()); await p.screenshot({path:S+'/o9.png'});
+await b.close(); })().catch(e=>{console.error('FAIL',e.message);process.exit(1)});

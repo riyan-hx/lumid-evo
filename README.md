@@ -31,5 +31,9 @@ Fonts: Helvetica Now Display is licensed — drop the files into `public/fonts/`
 15. **Backend** — API route handlers, auth (OTP), data, AI pipeline + safety gate (Dev Docs 06–07)
 16. **Quality** — analytics, a11y, i18n (EN/ML), Playwright (Dev Docs 08)
 
+## End-to-end checks
+With the app running (`npm run build && npm start`): `BASE_URL=http://localhost:3000 node e2e/onboarding.cjs`
+(uses the Playwright install available on the machine; the mock OTP code is `123456`).
+
 ## Scripts
 `npm run dev` · `npm run build` · `npm run lint` · `npm run typecheck`
