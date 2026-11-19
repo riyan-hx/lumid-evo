@@ -12,7 +12,7 @@ const TABS = [
 ];
 
 /** Screens that show the nav in Figma (tab roots). Flow screens (check-in steps, tools…) don't. */
-const SHOWN = ["/home", "/first-day", "/chat", "/chats", "/voice", "/settings", "/journal", "/insights/week"];
+const SHOWN = ["/home", "/first-day", "/chat", "/chats", "/chats/results", "/settings", "/journal", "/insights/week"];
 
 /**
  * Evo DS "Bottom Nav" (Figma 1:188), exact: floating pill, dashed border, 60 px circles,

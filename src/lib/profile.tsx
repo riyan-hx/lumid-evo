@@ -19,8 +19,17 @@ export type Profile = {
   appLock: boolean;
   reminder: Reminder;
   checkinStyle: CheckinStyle;
+  /** X2 · how Evo talks. */
+  chatTone: ChatTone;
+  replyLength: ReplyLength;
+  chatLanguage: ChatLanguage;
   onboarded: boolean;
 };
+
+export type ChatTone = "warm" | "direct" | "listen";
+export type ReplyLength = "short" | "medium" | "detailed";
+export type ChatLanguage = "English" | "Malayalam" | "Mix of both";
+export const TONE_LABEL: Record<ChatTone, string> = { warm: "warm", direct: "to the point", listen: "listening" };
 
 export type CheckinStyle = "quick" | "meter" | "wheel" | "voice" | "body" | "classic";
 
@@ -46,6 +55,9 @@ export const DEFAULT_PROFILE: Profile = {
   appLock: false,
   reminder: "after-dinner",
   checkinStyle: "classic",
+  chatTone: "warm",
+  replyLength: "short",
+  chatLanguage: "English",
   onboarded: false,
 };
 

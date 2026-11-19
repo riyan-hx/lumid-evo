@@ -124,7 +124,7 @@ export function FlowHeader({ icon, label, title, sub, onClick, solid }: { icon: 
       </button>
       <div className="flex flex-1 flex-col gap-px">
         <p className="type-label-m text-t1">{title}</p>
-        <p className="type-caption text-t3">{sub}</p>
+        {sub && <p className="type-caption text-t3">{sub}</p>}
       </div>
     </div>
   );

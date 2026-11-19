@@ -13,6 +13,11 @@ const GLOWS = {
     { src: "/figma/glow/night-1.svg", x: 20, y: -200, w: 580, h: 530 },
     { src: "/figma/glow/night-2.svg", x: -250, y: 460, w: 500, h: 480 },
   ],
+  /** X14 · late-night chat: deeper lime glow on the same forest gradient as "night". */
+  latenight: [
+    { src: "/figma/glow/latenight-1.svg", x: 60, y: -220, w: 580, h: 530 },
+    { src: "/figma/glow/latenight-2.svg", x: -240, y: 460, w: 500, h: 480 },
+  ],
   warm: [
     { src: "/figma/glow/warm-1.svg", x: 10, y: -220, w: 640, h: 580 },
     { src: "/figma/glow/warm-2.svg", x: -230, y: 240, w: 500, h: 480 },
@@ -42,10 +47,11 @@ type Props = {
  * Fills the viewport height; on wider viewports the 393-wide design column is centred.
  */
 export function FigmaScreen({ children, mood = "day", gap = 18, pt = 58, className }: Props) {
+  const dark = mood === "night" || mood === "latenight";
   return (
     <div
-      className={cn("relative min-h-dvh w-full overflow-hidden", mood === "night" ? "" : "bg-paper")}
-      style={mood === "night" ? { backgroundImage: "linear-gradient(114.76deg, rgb(51,65,46) 0%, rgb(21,26,19) 71.429%)" } : undefined}
+      className={cn("relative min-h-dvh w-full overflow-hidden", dark ? "" : "bg-paper")}
+      style={dark ? { backgroundImage: "linear-gradient(114.76deg, rgb(51,65,46) 0%, rgb(21,26,19) 71.429%)" } : undefined}
     >
       <div className="relative mx-auto w-full max-w-[430px]">
         {GLOWS[mood].map((g) => (
