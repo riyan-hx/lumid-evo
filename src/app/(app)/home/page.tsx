@@ -8,7 +8,7 @@ import { FigmaScreen } from "@/components/figma/screen";
 import { SoftChip } from "@/components/ui/controls";
 import { Orb } from "@/components/ui/orb";
 import { useCheckIns } from "@/lib/checkins";
-import { useProfile } from "@/lib/profile";
+import { STYLE_HREF, useProfile } from "@/lib/profile";
 
 const part = (h: number) => (h < 12 ? "morning" : h < 17 ? "afternoon" : "evening");
 
@@ -75,7 +75,7 @@ export default function Home() {
         ))}
         {!hideAsk && (
           <div className="flex gap-2">
-            <SoftChip label="Check in" selected onClick={() => router.push("/check-in")} />
+            <SoftChip label="Check in" selected onClick={() => router.push(STYLE_HREF[profile.checkinStyle] ?? "/check-in")} />
             <SoftChip label="Not now" onClick={() => setHideAsk(true)} />
           </div>
         )}

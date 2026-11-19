@@ -9,6 +9,15 @@ const GLOWS = {
     { src: "/figma/glow/day-3.svg", x: 100, y: 460, w: 500, h: 480 },
     { src: "/figma/glow/day-4.svg", x: -240, y: 600, w: 520, h: 500 },
   ],
+  night: [
+    { src: "/figma/glow/night-1.svg", x: 20, y: -200, w: 580, h: 530 },
+    { src: "/figma/glow/night-2.svg", x: -250, y: 460, w: 500, h: 480 },
+  ],
+  warm: [
+    { src: "/figma/glow/warm-1.svg", x: 10, y: -220, w: 640, h: 580 },
+    { src: "/figma/glow/warm-2.svg", x: -230, y: 240, w: 500, h: 480 },
+    { src: "/figma/glow/warm-3.svg", x: 100, y: 550, w: 520, h: 500 },
+  ],
   calm: [
     { src: "/figma/glow/calm-1.svg", x: 10, y: -220, w: 640, h: 580 },
     { src: "/figma/glow/calm-2.svg", x: -230, y: 230, w: 500, h: 480 },
@@ -34,7 +43,10 @@ type Props = {
  */
 export function FigmaScreen({ children, mood = "day", gap = 18, pt = 58, className }: Props) {
   return (
-    <div className="relative min-h-dvh w-full overflow-hidden bg-paper">
+    <div
+      className={cn("relative min-h-dvh w-full overflow-hidden", mood === "night" ? "" : "bg-paper")}
+      style={mood === "night" ? { backgroundImage: "linear-gradient(114.76deg, rgb(51,65,46) 0%, rgb(21,26,19) 71.429%)" } : undefined}
+    >
       <div className="relative mx-auto w-full max-w-[430px]">
         {GLOWS[mood].map((g) => (
           // eslint-disable-next-line @next/next/no-img-element -- decorative Figma asset, fixed geometry

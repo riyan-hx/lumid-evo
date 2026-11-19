@@ -111,14 +111,14 @@ export function SectionLabel({ children }: { children: ReactNode }) {
 }
 
 /** Header for flow screens: 44 px glass close/back + "Check-in" title + caption (no 100 px row). */
-export function FlowHeader({ icon, label, title, sub, onClick }: { icon: "close" | "chevron-left"; label: string; title: string; sub: string; onClick: () => void }) {
+export function FlowHeader({ icon, label, title, sub, onClick, solid }: { icon: "close" | "chevron-left"; label: string; title: string; sub: string; onClick: () => void; solid?: boolean }) {
   return (
     <div className="flex w-full items-center gap-2.5">
       <button
         type="button"
         aria-label={label}
         onClick={onClick}
-        className="flex size-11 shrink-0 cursor-pointer items-center justify-center rounded-[22px] border border-white bg-white/78 backdrop-blur-[12px]"
+        className={cn("flex size-11 shrink-0 cursor-pointer items-center justify-center rounded-[22px] border border-white backdrop-blur-[12px]", solid ? "bg-surface" : "bg-white/78")}
       >
         <FigmaIcon name={icon} size={20} />
       </button>
@@ -141,7 +141,11 @@ export function FigmaSlider({
   value,
   onChange,
   ariaValueText,
+  trackBg = "bg-lime-soft",
+  solid,
 }: {
+  trackBg?: string;
+  solid?: boolean;
   label: string;
   valueText: string;
   fraction: number;
@@ -154,12 +158,12 @@ export function FigmaSlider({
 }) {
   const pct = Math.max(0, Math.min(1, fraction)) * 100;
   return (
-    <div className="flex w-full flex-col gap-2.5 rounded-[20px] border border-white bg-white/78 p-3.5 shadow-[0_10px_26px_rgba(21,26,19,0.07)] backdrop-blur-[12px]">
+    <div className={cn("flex w-full flex-col gap-2.5 rounded-[20px] border border-white p-3.5 shadow-[0_10px_26px_rgba(21,26,19,0.07)] backdrop-blur-[12px]", solid ? "bg-surface" : "bg-white/78")}>
       <div className="flex w-full items-center">
         <p className="flex-1 type-label-m text-t1">{label}</p>
         <p className="type-label-s text-lime-deep">{valueText}</p>
       </div>
-      <div className="relative h-2.5 w-full rounded-[5px] bg-lime-soft">
+      <div className={cn("relative h-2.5 w-full rounded-[5px]", trackBg)}>
         <div className="absolute top-0 left-0 h-2.5 rounded-[5px]" style={{ width: `${pct}%`, backgroundImage: "var(--gradient-lime)" }} />
         {/* eslint-disable-next-line @next/next/no-img-element -- Figma knob (22 px + shadow bleed) */}
         <img src="/figma/slider-knob.svg" alt="" aria-hidden width={34} height={34} className="pointer-events-none absolute max-w-none" style={{ left: `calc(${pct}% - 17px)`, top: -10 }} />

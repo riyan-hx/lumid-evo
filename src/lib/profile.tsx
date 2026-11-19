@@ -18,7 +18,20 @@ export type Profile = {
   discreet: boolean;
   appLock: boolean;
   reminder: Reminder;
+  checkinStyle: CheckinStyle;
   onboarded: boolean;
+};
+
+export type CheckinStyle = "quick" | "meter" | "wheel" | "voice" | "body" | "classic";
+
+/** Route for each check-in style (C1). */
+export const STYLE_HREF: Record<CheckinStyle, string> = {
+  quick: "/check-in/quick",
+  meter: "/check-in/meter",
+  wheel: "/check-in/wheel",
+  voice: "/check-in/voice",
+  body: "/check-in/body",
+  classic: "/check-in",
 };
 
 export const DEFAULT_PROFILE: Profile = {
@@ -32,6 +45,7 @@ export const DEFAULT_PROFILE: Profile = {
   discreet: false,
   appLock: false,
   reminder: "after-dinner",
+  checkinStyle: "classic",
   onboarded: false,
 };
 

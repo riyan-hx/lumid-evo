@@ -58,9 +58,11 @@ function ClassicCheckIn() {
 
   function save() {
     const item = add({ style: "classic", feeling: d.feeling, word: d.word, intensity: d.intensity, energy: d.energy, body: d.body, causes: d.causes });
-    setResult({ item, decision: decide(item, items) });
+    const decision = decide(item, items);
+    setResult({ item, decision });
     clearDraft();
-    go("reflect");
+    if (decision.safety) router.push("/check-in/low");
+    else go("reflect");
   }
 
   /* ---------- 2.2 How are you feeling ---------- */
@@ -252,31 +254,10 @@ function ClassicCheckIn() {
     );
   }
   if (r.decision.safety) {
-    // C13 · safety-aware check-in (exact screen lands with Check-in v2, build step 7)
+    // Reached via Back/refresh: the safety screen owns this state (no reflection for very low check-ins).
     return (
-      <FigmaScreen gap={14} mood="calm">
-        <FlowHeader icon="close" label="Close" title="Check-in" sub="Saved" onClick={close} />
-        <div role="alert" className="flex w-full flex-col gap-3 rounded-[28px] border border-peach-soft bg-peach-subtle p-[18px]">
-          <div className="flex items-center gap-2.5">
-            <Orb size={32} />
-            <span className="type-label-m text-peach-text">Evo</span>
-          </div>
-          <p className="text-[22px] leading-[28px] font-medium tracking-[-0.088px] text-forest">That&apos;s a really heavy place to be. Can I check — are you safe right now?</p>
-          <Pill label="I'm not sure" icon={null} href="/safety" className="w-full" />
-          <Pill label="I'm safe, just very low" variant="glass" icon={null} href="/home" className="w-full" />
-        </div>
-        <a href="tel:14416" className="w-full">
-          <GlassCard className="rounded-[18px] p-3">
-            <Tile size={36} radius={12} bg="bg-peach-soft">
-              <FigmaIcon name="lifebuoy-peach" size={20} />
-            </Tile>
-            <div className="flex flex-1 flex-col gap-0.5">
-              <p className="type-label-m text-t1">Tele-MANAS 14416</p>
-              <p className="type-caption text-t3">Free · 24×7 · Malayalam</p>
-            </div>
-            <FigmaIcon name="chevron-right" size={18} />
-          </GlassCard>
-        </a>
+      <FigmaScreen gap={14}>
+        <Pill label="Continue" href="/check-in/low" className="w-full" />
       </FigmaScreen>
     );
   }
