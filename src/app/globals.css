@@ -247,6 +247,17 @@ body {
   }
 }
 
+@keyframes evo-spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  [style*="evo-spin"] {
+    animation: none !important;
+  }
+}
+
 /* Page entry (was a JS spring; CSS keeps SSR content visible before hydration). */
 @keyframes evo-enter {
   from {
